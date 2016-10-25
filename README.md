@@ -1,7 +1,7 @@
 # s-type
 ## Library-independent type checking similar to React PropTypes
 
-[![NPM version](https://img.shields.io/npm/v/s-types.svg)](https://www.npmjs.com/package/s-types) ![Dependencies](https://img.shields.io/david/sebastiansandqvist/s-type.svg) [![build status](http://img.shields.io/travis/sebastiansandqvist/s-type.svg)](https://travis-ci.org/sebastiansandqvist/s-type) [![NPM license](https://img.shields.io/npm/l/s-types.svg)](https://www.npmjs.com/package/s-types)
+[![NPM version](https://img.shields.io/npm/v/s-types.svg)](https://www.npmjs.com/package/s-types) ![Dependencies](https://img.shields.io/david/sebastiansandqvist/s-type.svg) [![build status](http://img.shields.io/travis/sebastiansandqvist/s-type.svg)](https://travis-ci.org/sebastiansandqvist/s-type) [![NPM license](https://img.shields.io/npm/l/s-types.svg)](https://www.npmjs.com/package/s-types) [![Test Coverage](https://codeclimate.com/github/sebastiansandqvist/s-type/badges/coverage.svg)](https://codeclimate.com/github/sebastiansandqvist/s-type/coverage)
 
 # Installation
 
