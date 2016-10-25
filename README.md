@@ -145,6 +145,8 @@ function positiveNumber(x) {
 	return typeof x === 'number' && x > 0;
 }
 
+postiiveNumber.type = 'positive number';
+
 const schema = {
 	n: positiveNumber
 };
