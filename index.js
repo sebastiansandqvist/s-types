@@ -1,3 +1,5 @@
+'use strict';
+
 function getType(x) {
 	const currentType = Object.prototype.toString.call(x).slice(8, -1).toLowerCase();
 	if (currentType === 'array' && x.length > 0) {

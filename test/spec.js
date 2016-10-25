@@ -1,3 +1,5 @@
+'use strict';
+
 const expect = require('chai').expect;
 const stderr = require('test-console').stderr;
 const T = require('../');
