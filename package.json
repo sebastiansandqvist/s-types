@@ -18,7 +18,7 @@
     "typecheck"
   ],
   "author": "sebastian sandqvist",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/sebastiansandqvist/s-type/issues"
   },

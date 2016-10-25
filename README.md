@@ -39,7 +39,6 @@ const fail = {
 T(schema)(fail, 'Bad Object');
 
 /*
-
 	Logs the following to stderr:
 
 	Failed typecheck in Bad Object
@@ -48,6 +47,8 @@ T(schema)(fail, 'Bad Object');
 
  */
 ```
+
+Using an array of types in the schema allows for multiple types to be used. These are `OR`ed together.
 
 ```js
 // Use an array to allow multiple types
@@ -77,6 +78,8 @@ T(schema)(anotherObject); // passes
 T(schema)(badObject); // fails
 
 ```
+
+The `T.schema` and `T.arrayOf` methods allow for nesting complex structures. For example:
 
 ```js
 const nestedRules = {
