@@ -8,7 +8,77 @@ function errorMessage(label, key, expectedType, providedType) {
 		'You provided \'' + key + '\' of type ' + providedType;
 }
 
+function unexpectedMessage(label, key) {
+	return 'Did not expect to find prop \'' + key + '\' in ' + label;
+}
+
 describe('s-type', function() {
+
+	it('checks functions', function() {
+
+		const props1 = { a: function() {} };
+		const props2 = { a: () => {} };
+		const props3 = { a() {} };
+		const type1 = { a: T.fn };
+		const typeFail1 = { a: T.number };
+
+		expect(T(type1)(props1)).to.equal(null);
+		expect(T(type1)(props2)).to.equal(null);
+		expect(T(type1)(props3)).to.equal(null);
+
+		expect(T(typeFail1)(props1, 'function test'))
+			.to.equal(errorMessage('function test', 'a', 'number', 'function'));
+
+	});
+
+	it('checks nulls', function() {
+
+		const props1 = { a: null };
+		const props2 = { a: undefined };
+		const props3 = {};
+		const type1 = { a: T.NULL };
+
+		expect(T(type1)(props1)).to.equal(null);
+
+		expect(T(type1)(props2, 'null test'))
+			.to.equal(errorMessage('null test', 'a', 'null', 'undefined'));
+
+		expect(T(type1)(props3, 'null test'))
+			.to.equal(errorMessage('null test', 'a', 'null', 'undefined'));
+
+	});
+
+	it('checks nils', function() {
+
+		const props1 = { a: null };
+		const props2 = { a: undefined };
+		const props3 = {};
+		const type1 = { a: T.nil };
+
+		expect(T(type1)(props1)).to.equal(null);
+		expect(T(type1)(props2)).to.equal(null);
+		expect(T(type1)(props3)).to.equal(null);
+
+	});
+
+	it('checks objects', function() {
+
+		const props1 = { a: {} };
+		const props2 = { a: { foo: 'bar' } };
+		const props3 = { a: new Date() };
+		const props4 = { a: null };
+		const type1 = { a: T.object };
+
+		expect(T(type1)(props1)).to.equal(null);
+		expect(T(type1)(props2)).to.equal(null);
+
+		expect(T(type1)(props3, 'object test'))
+			.to.equal(errorMessage('object test', 'a', 'object', 'date'));
+
+		expect(T(type1)(props4, 'object test'))
+			.to.equal(errorMessage('object test', 'a', 'object', 'null'));
+
+	});
 
 	it('checks strings', function() {
 
@@ -107,6 +177,7 @@ describe('s-type', function() {
 		const props1 = { a: [] };
 		const props2 = { a: [1, 2, 3] };
 		const props3 = { a: [[1, 2], [3, 4]] };
+		const props4 = { a: 1 };
 		const type1 = { a: T.arrayOf(T.number) };
 		const type2 = { a: T.arrayOf(T.arrayOf(T.number)) };
 		const typeFail1 = { a: T.arrayOf(T.string) };
@@ -119,6 +190,8 @@ describe('s-type', function() {
 			.to.equal(errorMessage('typed array test', 'a', '[array of strings]', '[array of numbers]'));
 		expect(T(typeFail2)(props3, 'typed array test'))
 			.to.equal(errorMessage('typed array test', 'a', '[array of numbers]', '[array of [array of numbers]s]'));
+		expect(T(typeFail2)(props4, 'typed array test'))
+			.to.equal(errorMessage('typed array test', 'a', '[array of numbers]', 'number'));
 
 	});
 
@@ -143,6 +216,70 @@ describe('s-type', function() {
 
 	});
 
+	it('allows `any` type', function() {
+
+		const props1 = { a: 5 };
+		const props2 = { a: [] };
+		const props3 = { a: {} };
+		const props4 = { a: 'foo' };
+		const props5 = { a: undefined };
+		const props6 = {};
+
+		const type1 = { a: T.any };
+
+		expect(T(type1)(props1)).to.equal(null);
+		expect(T(type1)(props2)).to.equal(null);
+		expect(T(type1)(props3)).to.equal(null);
+		expect(T(type1)(props4)).to.equal(null);
+		expect(T(type1)(props5)).to.equal(null);
+		expect(T(type1)(props6)).to.equal(null);
+
+	});
+
+	it('allows optionals', function() {
+
+		const props1 = { a: 5 };
+		const props2 = {};
+		const type1 = { a: [T.number, T.optional]};
+
+		expect(T(type1)(props1)).to.equal(null);
+		expect(T(type1)(props2)).to.equal(null);
+
+	});
+
+	it('allows multiple types', function() {
+
+		const props1 = { a: 5 };
+		const type1 = { a: [T.number, T.string]};
+		const typeFail1 = { a: [T.string, T.fn]};
+
+		expect(T(type1)(props1)).to.equal(null);
+
+		expect(T(typeFail1)(props1, 'multiple type test'))
+			.to.equal(errorMessage('multiple type test', 'a', 'string || function', 'number'));
+
+	});
+
+	it('reports only first error', function() {
+
+		const props1 = { a: 5, b: 'hello' };
+		const typeFail1 = { a: T.string, b: T.number };
+
+		expect(T(typeFail1)(props1, 'multiple error test'))
+			.to.equal(errorMessage('multiple error test', 'a', 'string', 'number'));
+
+	});
+
+	it('reports unexpected props', function() {
+
+		const props1 = { a: 5, b: 6 };
+		const typeFail1 = { a: T.number };
+
+		expect(T(typeFail1)(props1, 'unexpected prop test'))
+			.to.equal(unexpectedMessage('unexpected prop test', 'b'));
+
+	});
+
 	it('throws if passed undefined', function() {
 
 		const props1 = { a: 5 };
@@ -151,6 +288,16 @@ describe('s-type', function() {
 		expect(function() {
 			T(typeThrow)(props1);
 		}).to['throw']();
+
+	});
+
+	it('assigns a name to anonymous objects', function() {
+
+		const props1 = { a: 'hello' };
+		const typeFail1 = { a: T.number };
+
+		expect(T(typeFail1)(props1))
+			.to.equal(errorMessage('unknown object', 'a', 'number', 'string'));
 
 	});
 

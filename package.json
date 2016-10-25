@@ -7,7 +7,8 @@
     "test": "test"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "coverage": "istanbul cover node_modules/mocha/bin/_mocha -dir etc -- test/ -R spec"
   },
   "repository": {
     "type": "git",
@@ -26,6 +27,7 @@
   "devDependencies": {
     "@seabass/eslint-config": "1.7.0",
     "chai": "^3.5.0",
+    "istanbul": "0.4.5",
     "mocha": "^3.1.2",
     "test-console": "1.0.0"
   }

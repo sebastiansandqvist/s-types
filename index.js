@@ -48,6 +48,14 @@ function T(schema) {
 
 		}
 
+		for (const key in props) {
+			if (props.hasOwnProperty(key) && !schema.hasOwnProperty(key)) {
+				const errorMessage = 'Did not expect to find prop \'' + key + '\' in ' + label;
+				console.error(errorMessage);
+				return errorMessage;
+			}
+		}
+
 		return null;
 
 	};
@@ -78,11 +86,11 @@ T.date = function(x) {
 
 T.date.type = 'date';
 
-T['null'] = function(x) {
+T.NULL = T['null'] = function(x) {
 	return getType(x) === 'null';
 };
 
-T['null'].type = 'null';
+T.NULL.type = 'null';
 
 T.nil = function(x) {
 	return typeof x === 'undefined' || getType(x) === 'null';
@@ -144,6 +152,12 @@ T.bool = T['boolean'] = function(x) {
 };
 
 T.bool.type = 'boolean';
+
+T.any = function() {
+	return true;
+};
+
+T.any.type = 'any';
 
 // recursive
 T.schema = T['interface'] = function(schema) {
