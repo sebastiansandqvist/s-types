@@ -1,6 +1,6 @@
 {
   "name": "s-types",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Library-independent type checking similar to React Proptypes",
   "main": "index.js",
   "directories": {
