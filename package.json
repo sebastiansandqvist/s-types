@@ -1,0 +1,31 @@
+{
+  "name": "s-type",
+  "version": "0.0.0",
+  "description": "Library-independent type checking similar to React Proptypes",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sebastiansandqvist/s-type.git"
+  },
+  "keywords": [
+    "typecheck"
+  ],
+  "author": "sebastian sandqvist",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sebastiansandqvist/s-type/issues"
+  },
+  "homepage": "https://github.com/sebastiansandqvist/s-type#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "@seabass/eslint-config": "1.7.0",
+    "chai": "^3.5.0",
+    "mocha": "^3.1.2"
+  }
+}

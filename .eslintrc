@@ -1,0 +1,7 @@
+{
+	"extends": "@seabass",
+	"rules": {
+		"new-cap": 0,
+		"prefer-template": 0
+	}
+}
