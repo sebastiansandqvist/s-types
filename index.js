@@ -1,5 +1,9 @@
 function getType(x) {
-	return Object.prototype.toString.call(x).slice(8, -1).toLowerCase();
+	const currentType = Object.prototype.toString.call(x).slice(8, -1).toLowerCase();
+	if (currentType === 'array' && x.length > 0) {
+		return '[array of ' + getType(x[0]) + 's]';
+	}
+	return currentType;
 }
 
 function typeStringFromArray(arr) {
@@ -25,10 +29,17 @@ function T(schema) {
 				}, false);
 
 				if (!success) {
+
+					// recursive call will report errors in next round of checks
+					if (typeStringFromArray(rules).indexOf('interface') > -1) {
+						continue;
+					}
+
 					const errorMessage =
 						'Failed type check in ' + (label || 'unknown object') + '\n' +
 						'Expected prop \'' + key + '\' of type ' + typeStringFromArray(rules) + '\n' +
 						'You provided \'' + key + '\' of type ' + getType(props[key]);
+
 					console.error(errorMessage);
 					return errorMessage;
 				}
@@ -62,34 +73,38 @@ T.num = T.number = function(x) {
 T.num.type = 'number';
 
 T.date = function(x) {
-	return getType(x) === 'Date';
+	return getType(x) === 'date';
 };
 
 T.date.type = 'date';
 
 T['null'] = function(x) {
-	return getType(x) === 'Null';
+	return getType(x) === 'null';
 };
 
 T['null'].type = 'null';
 
 T.nil = function(x) {
-	return typeof x === 'undefined' || getType(x) === 'Null';
+	return typeof x === 'undefined' || getType(x) === 'null';
 };
 
 T.nil.type = 'nil';
 
 T.obj = T.object = function(x) {
-	return getType(x) === 'Object';
+	return getType(x) === 'object';
 };
+
+T.obj.type = 'object';
 
 T.arr = T.array = function(x) {
 	return Array.isArray(x);
 };
 
+T.arr.type = 'array';
+
 T.arrayOf = function(propType) {
 
-	return function(x) {
+	const arrayOfType = function(x) {
 
 		if (!Array.isArray(x)) {
 			return false;
@@ -105,25 +120,38 @@ T.arrayOf = function(propType) {
 
 	};
 
+	arrayOfType.type = '[array of ' + propType.type + 's]';
+
+	return arrayOfType;
+
 };
 
 T['int'] = T.integer = function(x) {
 	return typeof x === 'number' && isFinite(x) && Math.floor(x) === x;
 };
 
+
+T.integer.type = 'integer';
+
 T.optional = T.undefined = function(x) {
 	return typeof x === 'undefined';
 };
+
+T.optional.type = 'undefined';
 
 T.bool = T['boolean'] = function(x) {
 	return typeof x === 'boolean';
 };
 
+T.bool.type = 'boolean';
+
 // recursive
-T.schema = function(schema) {
-	return function(prop) {
-		T(schema)(prop);
+T.schema = T['interface'] = function(schema) {
+	const schemaType = function(prop) {
+		return !T(schema)(prop, 'nested interface'); // returns null if success, so invert as boolean
 	};
+	schemaType.type = 'interface';
+	return schemaType;
 };
 
 module.exports = T;
