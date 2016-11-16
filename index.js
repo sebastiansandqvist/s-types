@@ -136,6 +136,18 @@ T.arrayOf = function(propType) {
 
 };
 
+T.not = function(propType) {
+
+	const notType = function(x) {
+		return !propType(x);
+	};
+
+	notType.type = 'not(' + propType.type + ')';
+
+	return notType;
+
+};
+
 T['int'] = T.integer = function(x) {
 	return typeof x === 'number' && isFinite(x) && Math.floor(x) === x;
 };

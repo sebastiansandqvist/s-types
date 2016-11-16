@@ -238,6 +238,35 @@ describe('s-type', function() {
 
 	});
 
+	it('allows `not` types', function() {
+
+		const props1 = { a: 5 };
+		const props2 = { a: NaN };
+		const props3 = { a: 'foo' };
+
+		const type1 = { a: T.not(T.string) };
+
+		const nanCheck = function(x) {
+			return isNaN(x);
+		};
+
+		nanCheck.type = 'NaN';
+
+		const type2 = { a: T.not(nanCheck) };
+
+		expect(T(type1)(props1)).to.equal(null);
+		expect(T(type1)(props2)).to.equal(null);
+		expect(T(type1)(props3, 'not string test'))
+			.to.equal(errorMessage('not string test', 'a', 'not(string)', 'string'));
+
+		// NOTE: type checker does not check for NaN since NaN is of number type
+		expect(T(type2)(props1)).to.equal(null);
+		expect(T(type2)(props2, 'not nan test'))
+			.to.equal(errorMessage('not nan test', 'a', 'not(NaN)', 'number'));
+			// .to.equal(errorMessage('not nan test', 'a', 'not(NaN)', 'NaN'));
+
+	});
+
 	it('allows optionals', function() {
 
 		const props1 = { a: 5 };
