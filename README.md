@@ -16,18 +16,18 @@ Note that the npm package name ends in an 's'.
 ```js
 import T from 's-types';
 
-const schema = {
+const fooType = T({
 	foo: T.string,
 	bar: [T.number, T.optional],
 	baz: T.arrayOf(T.string)
-};
+});
 
 const someObject = {
 	foo: 'Hello',
 	baz: ['world', '!']
 };
 
-T(schema)(someObject); // passes test, nothing logged to console
+fooType(someObject); // passes test, nothing logged to console
 
 const fail = {
 	foo: 'Hello',
@@ -36,7 +36,7 @@ const fail = {
 };
 
 // optional second argument to provide name for better error messages
-T(schema)(fail, 'Bad Object');
+fooType(fail, 'Bad Object');
 
 /*
 	Logs the following to stderr:
@@ -53,10 +53,10 @@ Using an array of types in the schema allows for multiple types to be used. Thes
 ```js
 // Use an array to allow multiple types
 
-const schema = {
+const schema = T({
 	foo: [T.string, T.number],
 	bar: T.any
-};
+});
 
 const someObject = {
 	foo: 'Hello',
@@ -73,9 +73,9 @@ const badObject = {
 	bar: null
 };
 
-T(schema)(someObject); // passes
-T(schema)(anotherObject); // passes
-T(schema)(badObject); // fails
+schema(someObject); // passes
+schema(anotherObject); // passes
+schema(badObject); // fails
 
 ```
 
@@ -112,6 +112,8 @@ T(nestedRules)(someObject); // passes
 - __`T.function`__ (alias `T.fn`)
 - __`T.integer`__ (alias `T.int`)
 - __`T.nil`__ (prop is `null` or `undefined`)
+- __`T.not(type)`__
+	Example: `T.not(T.string)`
 - __`T.number`__ (alias `T.num`)
 - __`T.null`__ (alias `T.NULL`)
 - __`T.object`__ (alias `T.obj`)
