@@ -201,3 +201,11 @@ UserType(user2, 'Jane Doe user object'); // passes
 
 // The `UserType` typechecker can now be exported and used elsewhere
 ```
+
+## Things to note
+
+In most cases, the return value happens to be null when there are no errors or a string if a type mismatch occurred. For some structures, like `T.schema`, this does not always hold true and should not be relied upon. The only reliable output is whatever is logged to stderr.
+
+Nested interfaces (using T.schema) also do not retain the initial (optional) label passed into the type checking function and are instead assigned the label `nested interface` to help with identification.
+
+A pull request to change either of these would be welcome.
