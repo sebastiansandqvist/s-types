@@ -21,9 +21,11 @@ function T(schema) {
 
 	return function(props, label) {
 
+		if (T.disabled) { return; }
+
 		for (const key in schema) {
 
-			if (schema.hasOwnProperty(key)) {
+			if (Object.prototype.hasOwnProperty.call(schema, key)) {
 
 				const rules = Array.isArray(schema[key]) ? schema[key] : [schema[key]];
 				const success = rules.reduce(function(prev, rule) {
@@ -51,7 +53,7 @@ function T(schema) {
 		}
 
 		for (const key in props) {
-			if (props.hasOwnProperty(key) && !schema.hasOwnProperty(key)) {
+			if (Object.prototype.hasOwnProperty.call(props, key) && !Object.prototype.hasOwnProperty.call(schema, key)) {
 				const errorMessage = 'Did not expect to find prop \'' + key + '\' in ' + label;
 				console.error(errorMessage);
 				return errorMessage;
@@ -181,5 +183,7 @@ T.schema = T['interface'] = function(schema) {
 	schemaType.type = 'interface';
 	return schemaType;
 };
+
+T.disabled = false;
 
 module.exports = T;

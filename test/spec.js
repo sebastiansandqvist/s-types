@@ -332,5 +332,25 @@ describe('s-type', function() {
 
 	});
 
+	it('is noop in disabled mode', function() {
+
+		T.disabled = true;
+
+		// copy of schema test from here down,
+		// except has no output
+		const props1 = { a: { b: 'foo ', c: 5 } };
+		const type1 = { a: T.schema({ b: T.string, c: T.number })};
+		const typeFail1 = { a: T.schema({ b: T.string, c: T.string })};
+
+		// returns undefined now, since noop
+		expect(T(type1)(props1)).to.equal(undefined);
+
+		const output = stderr.inspectSync(function() {
+			T(typeFail1)(props1, 'interface test');
+		});
+
+		expect(output.length).to.equal(0);
+
+	});
 
 });
