@@ -162,8 +162,29 @@ T(schema)(obj); // passes
 
 ## Usage in production
 
-This should only be used in development and test environments, so remember to wrap any calls to `T` in a `if (__dev__)` or `if (process.env.node_env !== 'production')` branch.
+This should only be used in development and test environments, so when in production there is a mode that turns type checking into a noop.
 
+Just set `T.disabled` to `true` before running any type checking.
+
+One way to do this would be the following:
+
+```js
+import T from 's-types';
+
+T.disabled = process.env.node_env === 'production';
+
+const fooType = T({
+	foo: T.string
+});
+
+const fail = {
+	foo: 5
+};
+
+// in a development environment, this logs an error message
+// when process.env.node_env === 'production', this logs nothing
+fooType(fail, 'Bad Object');
+```
 
 ## Why two functions?
 
@@ -204,8 +225,8 @@ UserType(user2, 'Jane Doe user object'); // passes
 
 ## Things to note
 
-In most cases, the return value happens to be null when there are no errors or a string if a type mismatch occurred. For some structures, like `T.schema`, this does not always hold true and should not be relied upon. The only reliable output is whatever is logged to stderr.
+In most cases, the return value happens to be `null` when there are no errors or a string if a type mismatch occurred. For some structures, like `T.schema`, this does not always hold true and should not be relied upon. The only reliable output is whatever is logged to stderr. In addition, when `T.disabled` is set to `true`, the return value will always be `undefined`.
 
-Nested interfaces (using T.schema) also do not retain the initial (optional) label passed into the type checking function and are instead assigned the label `nested interface` to help with identification.
+Nested interfaces (using `T.schema`) also do not retain the initial (optional) label passed into the type checking function and are instead assigned the label `nested interface` to help with identification.
 
 A pull request to change either of these would be welcome.
