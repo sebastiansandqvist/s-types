@@ -332,7 +332,7 @@ describe('s-type', function() {
 
 	});
 
-	it('is noop in disabled mode', function() {
+	it('is noop if T.disabled === true', function() {
 
 		T.disabled = true;
 
@@ -350,6 +350,27 @@ describe('s-type', function() {
 		});
 
 		expect(output.length).to.equal(0);
+
+	});
+
+	it('throws if T.throws === true', function() {
+
+		T.disabled = false;
+		T.throws = true;
+
+		// copy of schema test from here down,
+		// except has no output
+		const props1 = { a: { b: 'foo ', c: 5 } };
+		const type1 = { a: T.schema({ b: T.string, c: T.number })};
+		const typeFail1 = { a: T.schema({ b: T.string, c: T.string })};
+
+		expect(function() {
+			T(type1)(props1);
+		}).to.not.throw();
+
+		expect(function() {
+			T(typeFail1)(props1);
+		}).to.throw(errorMessage('nested interface', 'c', 'string', 'number'));
 
 	});
 

@@ -185,6 +185,25 @@ const fail = {
 // when process.env.node_env === 'production', this logs nothing
 fooType(fail, 'Bad Object');
 ```
+## Usage in test environments
+
+There is an option to change the typecheckers to `throw` rather than log to `console.error`. This can be enabled in test environments to make typechecking testable without having to check for messages in stdout.
+
+```js
+import T from 's-types';
+
+T.throws = true;
+
+const fooType = T({
+	foo: T.string
+});
+
+const fail = {
+	foo: 5
+};
+
+fooType(fail, 'Bad Object'); // throws a TypeError
+```
 
 ## Why two functions?
 
@@ -225,7 +244,7 @@ UserType(user2, 'Jane Doe user object'); // passes
 
 ## Things to note
 
-In most cases, the return value happens to be `null` when there are no errors or a string if a type mismatch occurred. For some structures, like `T.schema`, this does not always hold true and should not be relied upon. The only reliable output is whatever is logged to stderr. In addition, when `T.disabled` is set to `true`, the return value will always be `undefined`.
+In most cases, the return value happens to be `null` when there are no errors or a string if a type mismatch occurred. For some structures, like `T.schema`, this does not always hold true and **should not be relied upon**. The only reliable output is whatever is logged to stderr (or the TypeError that is thrown if `T.throws` is enabled). In addition, when `T.disabled` is set to `true`, the return value will always be `undefined`.
 
 Nested interfaces (using `T.schema`) also do not retain the initial (optional) label passed into the type checking function and are instead assigned the label `nested interface` to help with identification.
 

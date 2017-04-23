@@ -34,15 +34,19 @@ function T(schema) {
 
 				if (!success) {
 
-					// recursive call will report errors in next round of checks
-					if (typeStringFromArray(rules).indexOf('interface') > -1) {
-						continue;
-					}
-
 					const errorMessage =
 						'Failed type check in ' + (label || 'unknown object') + '\n' +
 						'Expected prop \'' + key + '\' of type ' + typeStringFromArray(rules) + '\n' +
 						'You provided \'' + key + '\' of type ' + getType(props[key]);
+
+					if (T.throws) {
+						throw new TypeError(errorMessage);
+					}
+
+					// recursive call will report errors in next round of checks
+					if (typeStringFromArray(rules).indexOf('interface') > -1) {
+						continue;
+					}
 
 					console.error(errorMessage);
 					return errorMessage;
@@ -185,5 +189,6 @@ T.schema = T['interface'] = function(schema) {
 };
 
 T.disabled = false;
+T.throws = false;
 
 module.exports = T;
