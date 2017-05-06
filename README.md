@@ -1,15 +1,13 @@
-# s-type
+# s-types
 ## Library-independent type checking similar to React PropTypes
 
-[![NPM version](https://img.shields.io/npm/v/s-types.svg)](https://www.npmjs.com/package/s-types) ![Dependencies](https://img.shields.io/david/sebastiansandqvist/s-type.svg) [![build status](http://img.shields.io/travis/sebastiansandqvist/s-type.svg)](https://travis-ci.org/sebastiansandqvist/s-type) [![NPM license](https://img.shields.io/npm/l/s-types.svg)](https://www.npmjs.com/package/s-types) [![Test Coverage](https://codeclimate.com/github/sebastiansandqvist/s-type/badges/coverage.svg)](https://codeclimate.com/github/sebastiansandqvist/s-type/coverage)
+[![NPM version](https://img.shields.io/npm/v/s-types.svg)](https://www.npmjs.com/package/s-types) ![Dependencies](https://img.shields.io/david/sebastiansandqvist/s-types.svg) [![build status](http://img.shields.io/travis/sebastiansandqvist/s-types.svg)](https://travis-ci.org/sebastiansandqvist/s-types) [![NPM license](https://img.shields.io/npm/l/s-types.svg)](https://www.npmjs.com/package/s-types) [![Test Coverage](https://codeclimate.com/github/sebastiansandqvist/s-types/badges/coverage.svg)](https://codeclimate.com/github/sebastiansandqvist/s-types/coverage)
 
 # Installation
 
 ```bash
 npm install --save s-types
 ```
-
-Note that the npm package name ends in an 's'.
 
 # Usage
 
@@ -124,7 +122,7 @@ T(nestedRules)(someObject); // passes
 
 ## Custom types
 
-If the provided types are not sufficient, you can provide a custom type checking function to s-type.
+If the provided types are not sufficient, you can provide a custom type checking function to s-types.
 
 These functions take one argument (the value of the property to be type checked) and return a boolean to indicate whether it is valid or not.
 
@@ -247,5 +245,3 @@ UserType(user2, 'Jane Doe user object'); // passes
 In most cases, the return value happens to be `null` when there are no errors or a string if a type mismatch occurred. For some structures, like `T.schema`, this does not always hold true and **should not be relied upon**. The only reliable output is whatever is logged to stderr (or the TypeError that is thrown if `T.throws` is enabled). In addition, when `T.disabled` is set to `true`, the return value will always be `undefined`.
 
 Nested interfaces (using `T.schema`) also do not retain the initial (optional) label passed into the type checking function and are instead assigned the label `nested interface` to help with identification.
-
-A pull request to change either of these would be welcome.
