@@ -234,7 +234,7 @@ describe('s-type', function() {
 
 		expect(output.length).to.equal(1);
 		expect(output[0])
-			.to.equal(errorMessage('nested interface', 'c', 'string', 'number\n')); // NOTE: \n needed because of nesting
+			.to.equal(errorMessage('interface test', 'c', 'string', 'number\n')); // NOTE: \n needed because of nesting
 
 	});
 

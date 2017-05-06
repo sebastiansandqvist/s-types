@@ -1,7 +1,10 @@
 'use strict';
 
+const hasOwn = Object.prototype.hasOwnProperty;
+const toStr = Object.prototype.toString;
+
 function getType(x) {
-	const currentType = Object.prototype.toString.call(x).slice(8, -1).toLowerCase();
+	const currentType = toStr.call(x).slice(8, -1).toLowerCase();
 	if (currentType === 'array' && x.length > 0) {
 		return '[array of ' + getType(x[0]) + 's]';
 	}
@@ -25,11 +28,11 @@ function T(schema) {
 
 		for (const key in schema) {
 
-			if (Object.prototype.hasOwnProperty.call(schema, key)) {
+			if (hasOwn.call(schema, key)) {
 
 				const rules = Array.isArray(schema[key]) ? schema[key] : [schema[key]];
 				const success = rules.reduce(function(prev, rule) {
-					return prev || rule(props[key]);
+					return prev || rule(props[key], label);
 				}, false);
 
 				if (!success) {
@@ -57,7 +60,7 @@ function T(schema) {
 		}
 
 		for (const key in props) {
-			if (Object.prototype.hasOwnProperty.call(props, key) && !Object.prototype.hasOwnProperty.call(schema, key)) {
+			if (hasOwn.call(props, key) && !hasOwn.call(schema, key)) {
 				const errorMessage = 'Did not expect to find prop \'' + key + '\' in ' + label;
 				console.error(errorMessage);
 				return errorMessage;
@@ -203,8 +206,8 @@ T.any.type = 'any';
 
 // recursive
 T.schema = T['interface'] = function(schema) {
-	const schemaType = function(prop) {
-		return !T(schema)(prop, 'nested interface'); // returns null if success, so invert as boolean
+	const schemaType = function(prop, label) {
+		return !T(schema)(prop, label || 'nested interface'); // returns null if success, so invert as boolean
 	};
 	schemaType.type = 'interface';
 	return schemaType;

@@ -280,5 +280,3 @@ UserType(user2, 'Jane Doe user object'); // passes
 ## Things to note
 
 In most cases, the return value happens to be `null` when there are no errors or a string if a type mismatch occurred. For some structures, like `T.schema`, this does not always hold true and **should not be relied upon**. The only reliable output is whatever is logged to stderr (or the TypeError that is thrown if `T.throws` is enabled). In addition, when `T.disabled` is set to `true`, the return value will always be `undefined`.
-
-Nested interfaces (using `T.schema`) also do not retain the initial (optional) label passed into the type checking function and are instead assigned the label `nested interface` to help with identification.
