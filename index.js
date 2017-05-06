@@ -173,6 +173,28 @@ T.bool = T['boolean'] = function(x) {
 
 T.bool.type = 'boolean';
 
+function quoteIfString(x) {
+	return typeof x === 'string' ? ('"' + x + '"') : x;
+}
+
+T.exact = function(exactValue) {
+	const exactType = function(x) {
+		return x === exactValue;
+	};
+	const formattedValue = quoteIfString(exactValue);
+	exactType.type = 'exact(' + formattedValue + ')';
+	return exactType;
+};
+
+T.oneOf = function(values) {
+	const oneOfType = function(x) {
+		return values.reduce((success, next) => success || (x === next), false);
+	};
+	const formattedValue = '[' + values.map(quoteIfString).join(', ') + ']';
+	oneOfType.type = 'oneOf(' + formattedValue + ')';
+	return oneOfType;
+};
+
 T.any = function() {
 	return true;
 };

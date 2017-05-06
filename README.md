@@ -80,13 +80,13 @@ schema(badObject); // fails
 The `T.schema` and `T.arrayOf` methods allow for nesting complex structures. For example:
 
 ```js
-const nestedRules = {
+const nestedRules = T({
 	foo: T.string,
 	bar: T.schema({
 		baz: T.number,
 		qux: T.arrayOf(T.arrayOf(T.number))
 	})
-};
+});
 
 const someObject = {
 	foo: 'Hello',
@@ -96,7 +96,40 @@ const someObject = {
 	}
 };
 
-T(nestedRules)(someObject); // passes
+nestedRules(someObject); // passes
+```
+
+The `T.exact` and `T.oneOf` methods allow to restrict to an exact value. For instance, a property that must contain the value `"foo"` could be defined like this:
+
+```js
+const rules = T({
+	x: T.exact('foo'),
+	y: [T.exact('bar'), T.optional]
+})
+
+const obj1 = { x: 'foo' };
+const obj2 = { x: 'foo', y: 'bar' };
+const obj3 = { x: 'bar' };
+
+rules(obj1); // passes
+rules(obj2); // passes
+rules(obj3); // fails
+```
+
+`T.oneOf([a, b, c])` is a shorthand for `[T.exact(a), T.exact(b), T.exact(c)]`. It allows you to specify an array of allowed values.
+
+```js
+const rules = T({
+	x: T.oneOf(['foo', 'bar'])
+})
+
+const obj1 = { x: 'foo' };
+const obj2 = { x: 'bar' };
+const obj3 = { x: 'baz' };
+
+rules(obj1); // passes
+rules(obj2); // passes
+rules(obj3); // fails
 ```
 
 ## Types provided
@@ -107,6 +140,8 @@ T(nestedRules)(someObject); // passes
 	Example: `T.arrayOf(T.string)`
 - __`T.boolean`__ (alias `T.bool`)
 - __`T.date`__
+- __`T.exact`__
+	Example: `T.exact('foo')`
 - __`T.function`__ (alias `T.fn`)
 - __`T.integer`__ (alias `T.int`)
 - __`T.nil`__ (prop is `null` or `undefined`)
@@ -115,6 +150,8 @@ T(nestedRules)(someObject); // passes
 - __`T.number`__ (alias `T.num`)
 - __`T.null`__ (alias `T.NULL`)
 - __`T.object`__ (alias `T.obj`)
+- __`T.oneOf`__
+	Example: `T.oneOf(['foo', 'bar'])`
 - __`T.optional`__ (alias `T.undefined`)
 - __`T.schema`__ (alias `T.interface`)
 	Example: `T.schema({ foo: T.string, bar: T.number })`

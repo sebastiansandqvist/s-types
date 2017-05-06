@@ -160,6 +160,26 @@ describe('s-type', function() {
 
 	});
 
+	it('checks `exact`', function() {
+		const props1 = { a: 'foo' };
+		const props2 = { a: 'bar' };
+		const type1 = T({ a: T.exact('foo') });
+		expect(type1(props1)).to.equal(null);
+		expect(type1(props2, 'exact test'))
+			.to.equal(errorMessage('exact test', 'a', 'exact("foo")', 'string'));
+	});
+
+	it('checks `oneOf`', function() {
+		const props1 = { a: 'foo' };
+		const props2 = { a: 5 };
+		const props3 = { a: 1 };
+		const type1 = T({ a: T.oneOf(['foo', 5]) });
+		expect(type1(props1)).to.equal(null);
+		expect(type1(props2)).to.equal(null);
+		expect(type1(props3, 'oneOf test'))
+			.to.equal(errorMessage('oneOf test', 'a', 'oneOf(["foo", 5])', 'number'));
+	});
+
 	it('checks arrays', function() {
 
 		const props1 = { a: [] };
